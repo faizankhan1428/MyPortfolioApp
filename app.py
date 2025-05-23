@@ -68,7 +68,7 @@ img.profile{width:160px;height:220px;object-fit:cover;border-radius:10px;
             box-shadow:0 0 10px rgba(0,0,0,0.5);margin-bottom:10px;}
 .center{text-align:center;}
 .project-thumbs{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:10px;}
-.project-thumbs img{width:60%;border-radius:8px;border:2px solid var(--accent);}
+.project-thumbs img{width:50%;border-radius:8px;border:2px solid var(--accent);}
 .home-description{background:var(--dark-blue);padding:15px;border-radius:12px;
                   box-shadow:0 0 8px rgba(0,0,0,0.3);margin-top:20px;}
 @media (max-width:600px){
@@ -155,21 +155,40 @@ def skills():
 
 @app.route('/projects')
 def projects():
-    folder_url = 'DataProfiler%20Project'
-    images = ''.join(
-        f'<img src="/projects/{folder_url}/step{i}.jpg" alt="Step {i}">'
+    # Project 1 data
+    folder_url1 = 'DataProfiler%20Project'
+    images1 = ''.join(
+        f'<img src="/projects/{folder_url1}/step{i}.jpg" alt="Step {i}">' 
         for i in range(1, 4)
     )
-    body = f'''
-    <h2>Projects</h2>
+    project1 = f'''
     <div class="card">
         <h3>Project 1: DataProfiler Web App</h3>
-        <div class="project-thumbs">{images}</div>
-        <p>A simple Flask-based web application that allows users to upload CSV files, view data profiling reports,
-        generate visualizations, apply cleaning options, and download the cleaned data.</p>
+        <div class="project-thumbs">{images1}</div>
+        <p>A simple Flask-based web application that lets users upload CSV files, generate automated data-profiling
+           reports, visualize insights, apply cleaning options, and download the refined dataset.</p>
         <p><a href="https://github.com/faizankhan1428/DataProfiler" target="_blank">View on GitHub</a></p>
     </div>
     '''
+
+    # Project 2 data
+    folder_url2 = 'Profile%20card%20generator%20project'
+    images2 = ''.join(
+        f'<img src="/projects/{folder_url2}/step{i}.jpg" alt="Profile Card Step {i}">' 
+        for i in range(1, 3)
+    )
+    project2 = f'''
+    <div class="card">
+        <h3>Project 2: Profile Card Generator</h3>
+        <div class="project-thumbs">{images2}</div>
+        <p>A lightweight Flask tool that transforms basic user info and an uploaded photo into a polished profile card.
+           It dynamically blends chosen colors, fonts, and layouts, then exports the finished card as a high-quality PNG
+           ready for portfolios, resumes, or social media.</p>
+        <p><a href="https://github.com/faizankhan1428/profile-card-generator" target="_blank">View on GitHub</a></p>
+    </div>
+    '''
+
+    body = f'<h2>Projects</h2>{project1}{project2}'
     return render_page('Projects | Muhammad Faizan', 'projects', body)
 
 @app.route('/certificates')
@@ -196,7 +215,7 @@ def certificates():
 @app.route('/experience')
 def experience():
     experiences = [
-        ("Auto Tech", "Team Lead / Data Entry / Report Writer", "2024 – Present, 1 yr",
+        ("Auto Tech", "Team Lead / Data Entry / Report Maker", "2024 – Present, 1 yr",
          "Leading a team, managing data pipelines and compiling analytical reports."),
         ("American Web Express", "Sales Executive & Team Leader", "2023 – 2024, 1 yr",
          "Drove sales strategy and coached agents on customer-focused communication."),
@@ -234,5 +253,3 @@ def contact():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-
-
