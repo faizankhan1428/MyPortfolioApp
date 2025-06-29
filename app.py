@@ -16,19 +16,6 @@ BASE_TEMPLATE = '''
 <meta name="theme-color" content="#1B263B">
 <title>{{ title }}</title>
 
-<!-- Open Graph / Facebook -->
-<meta property="og:title" content="{{ title }}">
-<meta property="og:description" content="Explore Muhammad Faizan's skills and projects in AI, data science, and machine learning.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="/profile/myphoto.jpg">
-<meta property="og:url" content="https://yourdomain.com/">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="{{ title }}">
-<meta name="twitter:description" content="Explore Muhammad Faizan's skills and projects in AI, data science, and machine learning.">
-<meta name="twitter:image" content="/profile/myphoto.jpg">
-
 <link rel="icon" type="image/png" href="/profile/myphoto.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
@@ -43,41 +30,44 @@ body{background:var(--light-blue);color:var(--white);}
 nav{background:var(--dark-blue);padding:15px 30px;display:flex;gap:20px;flex-wrap:wrap;}
 nav a{color:var(--white);text-decoration:none;font-weight:400;}
 nav a.active,nav a:hover{color:var(--accent);font-weight:600;}
-.container{max-width:900px;margin:40px auto;padding:20px;}
-h1{font-size:42px;color:var(--white);margin-bottom:15px;}
-h2{color:var(--white);margin-bottom:15px;}
-.progress{background:#888;border-radius:25px;overflow:hidden;height:20px;margin:10px 0;}
+.container{max-width:1000px;margin:40px auto;padding:20px;}
+h1{font-size:42px;margin-bottom:15px;}
+h2{margin-bottom:15px;}
+.progress{background:#888;border-radius:25px;overflow:hidden;height:16px;margin:10px 0;}
 .progress-bar{height:100%;background:var(--accent);text-align:right;padding-right:8px;
-             line-height:20px;color:var(--white);font-size:12px;}
-.card{background:var(--dark-blue);padding:20px;border-radius:10px;margin-bottom:25px;
+             line-height:16px;color:var(--white);font-size:12px;}
+.card{background:var(--dark-blue);padding:15px;border-radius:10px;margin-bottom:25px;
       box-shadow:0 0 10px rgba(0,0,0,0.3);}
-.card img{max-width:100%;border-radius:8px;margin-bottom:15px;}
 .cert-container{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;}
-.cert{width:47%;background:var(--dark-blue);padding:15px;border-radius:10px;
+.cert{width:30%;background:var(--dark-blue);padding:15px;border-radius:10px;
       box-shadow:0 0 8px rgba(0,0,0,0.3);}
 .cert img{width:100%;border:2px solid var(--accent);border-radius:8px;}
 .cert p{margin-top:8px;font-size:14px;}
-.timeline{position:relative;}
 .entry-box{background:var(--dark-blue);padding:15px 20px;border-radius:15px;
            margin-bottom:20px;box-shadow:0 0 10px rgba(0,0,0,0.3);}
-.entry-box h3{margin-bottom:8px;}
 .contact-box{background:var(--dark-blue);padding:10px 15px;margin-bottom:10px;
              border-radius:12px;box-shadow:0 0 5px rgba(0,0,0,0.2);}
 .contact-box a{color:var(--white);text-decoration:none;}
 img.profile{width:160px;height:220px;object-fit:cover;border-radius:10px;
             box-shadow:0 0 10px rgba(0,0,0,0.5);margin-bottom:10px;}
 .center{text-align:center;}
-.project-thumbs{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:10px;}
-.project-thumbs img{width:50%;border-radius:8px;border:2px solid var(--accent);}
+.project-grid{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;}
+.project-card{width:30%;background:var(--dark-blue);padding:15px;border-radius:10px;
+              box-shadow:0 0 8px rgba(0,0,0,0.3);}
+.project-card img{width:100%;border-radius:8px;border:2px solid var(--accent);}
+.project-card p{margin:10px 0;font-size:14px;}
+.project-card a{color:var(--accent);font-size:14px;text-decoration:none;}
 .home-description{background:var(--dark-blue);padding:15px;border-radius:12px;
                   box-shadow:0 0 8px rgba(0,0,0,0.3);margin-top:20px;}
+@media (max-width:900px){
+  .project-card, .cert{width:47%;}
+}
 @media (max-width:600px){
   nav{flex-direction:column;gap:10px;padding:10px;}
   .container{padding:15px;margin:20px;}
   h1{font-size:32px;}
   img.profile{width:120px;height:160px;}
-  .project-thumbs img{width:100%;}
-  .cert{width:100%;}
+  .project-card, .cert{width:100%;}
   .cert-container{flex-direction:column;}
 }
 </style>
@@ -98,21 +88,24 @@ img.profile{width:160px;height:220px;object-fit:cover;border-radius:10px;
 </html>
 '''
 
+# ── helper ─────────────────────────────────────────────────────────────────────
 def render_page(title, active, body_html):
     return render_template_string(BASE_TEMPLATE, title=title, active=active, body=body_html)
 
+# ── static file routes ─────────────────────────────────────────────────────────
 @app.route('/profile/<path:filename>')
 def profile_file(filename):
     return send_from_directory('profile', filename)
 
-@app.route('/projects/<path:filepath>')
-def project_files(filepath):
-    return send_from_directory('projects', filepath)
+@app.route('/projects/<path:filename>')
+def project_files(filename):
+    return send_from_directory('projects', filename)
 
 @app.route('/certificates/<path:filename>')
 def certificate_files(filename):
     return send_from_directory('certificates', filename)
 
+# ── page: home ─────────────────────────────────────────────────────────────────
 @app.route('/')
 def home():
     body = '''
@@ -128,6 +121,7 @@ def home():
     '''
     return render_page('Muhammad Faizan | Home', 'home', body)
 
+# ── page: skills ───────────────────────────────────────────────────────────────
 @app.route('/skills')
 def skills():
     skills_data = [
@@ -147,50 +141,45 @@ def skills():
         f'<div class="progress-bar" style="width:{pct}%">{pct}%</div></div>'
         for name, pct in skills_data
     )
-    body = f'''
-    <h2>Skills</h2>
-    <div class="card">{bars}</div>
-    '''
+    body = f'<h2>Skills</h2><div class="card">{bars}</div>'
     return render_page('Skills | Muhammad Faizan', 'skills', body)
 
+# ── page: projects ─────────────────────────────────────────────────────────────
 @app.route('/projects')
 def projects():
-    # Project 1 data
-    folder_url1 = 'DataProfiler%20Project'
-    images1 = ''.join(
-        f'<img src="/projects/{folder_url1}/step{i}.jpg" alt="Step {i}">' 
-        for i in range(1, 4)
-    )
-    project1 = f'''
-    <div class="card">
-        <h3>Project 1: DataProfiler Web App</h3>
-        <div class="project-thumbs">{images1}</div>
-        <p>A simple Flask-based web application that lets users upload CSV files, generate automated data-profiling
-           reports, visualize insights, apply cleaning options, and download the refined dataset.</p>
-        <p><a href="https://github.com/faizankhan1428/DataProfiler" target="_blank">View on GitHub</a></p>
-    </div>
-    '''
+    projects = [
+        ("ai%20travel%20planner.jpg", "Ai Travel Planner",
+         "A Flask-based web application that helps users plan personalized trips across Pakistan based on their budget, preferences, and travel goals.",
+         "https://my-ai-travel-guide.vercel.app/"),
 
-    # Project 2 data
-    folder_url2 = 'Profile%20card%20generator%20project'
-    images2 = ''.join(
-        f'<img src="/projects/{folder_url2}/step{i}.jpg" alt="Profile Card Step {i}">' 
-        for i in range(1, 3)
-    )
-    project2 = f'''
-    <div class="card">
-        <h3>Project 2: Profile Card Generator</h3>
-        <div class="project-thumbs">{images2}</div>
-        <p>A lightweight Flask tool that transforms basic user info and an uploaded photo into a polished profile card.
-           It dynamically blends chosen colors, fonts, and layouts, then exports the finished card as a high-quality PNG
-           ready for portfolios, resumes, or social media.</p>
-        <p><a href="https://github.com/faizankhan1428/profile-card-generator" target="_blank">View on GitHub</a></p>
-    </div>
-    '''
+        ("cnn%20cat%20vs%20dog%20classifier.jpg", "CNN Cat vs Dog Classifier",
+         "A complete CNN-based image classification project to identify cats and dogs using TensorFlow/Keras, including EDA, training, evaluation, and predictions.",
+         "https://github.com/faizankhan1428/cats-vs-dogs-cnn"),
 
-    body = f'<h2>Projects</h2>{project1}{project2}'
+        ("titanic%20survival%20prediction.jpg", "Titanic Survival Prediction",
+         "Beginner-friendly Titanic survival prediction using EDA, feature engineering, and Random Forest model. Built for Kaggle competition.",
+         "https://github.com/faizankhan1428/titanic-survival-prediction"),
+
+        ("Data%20profiler.jpg", "Data Profiler",
+         "A simple Flask-based web application that allows users to upload CSV files, view data profiling reports, generate visualizations, apply cleaning options, and download the cleaned data.",
+         "https://data.profiler.vercel.app/"),
+
+        ("psl%20cricket%20analysis.jpg", "PSL Cricket Analysis",
+         "A machine learning model that predicts match winners based on team combinations.",
+         "https://github.com/faizankhan1428/PSL")
+    ]
+    cards = ''.join(f'''
+    <div class="project-card">
+        <img src="/projects/{img}" alt="{title}">
+        <h3>{title}</h3>
+        <p>{desc}</p>
+        <p><a href="{link}" target="_blank">View Project</a></p>
+    </div>
+    ''' for img, title, desc, link in projects)
+    body = f'<h2>Projects</h2><div class="project-grid">{cards}</div>'
     return render_page('Projects | Muhammad Faizan', 'projects', body)
 
+# ── page: certificates ─────────────────────────────────────────────────────────
 @app.route('/certificates')
 def certificates():
     certs = [
@@ -200,40 +189,38 @@ def certificates():
         ('certificate4.png', 'NLP and Text Mining (SkillUp by Simplilearn)'),
         ('certificate5.png', 'Virtual session: Unlocking Data Science (Xounity)'),
         ('certificate6.png', 'Basics of Machine-Learning Algorithms (UniAthena)'),
-        ('certificate7.png', 'Deep Learning (SkillUp by Simplilearn)')
+        ('certificate7.png', 'Deep Learning (SkillUp by Simplilearn)'),
+        ('certificate8.png', 'Python Programming: Complete Course for Success (Udemy)'),
+        ('certificate9.png', 'Python Course (Kaggle)')
     ]
     cert_html = ''.join(
-        f'<div class="cert">'
-        f'  <img src="/certificates/{file}" alt="{desc}">'
-        f'  <p>{desc}</p>'
-        f'</div>'
+        f'<div class="cert"><img src="/certificates/{file}" alt="{desc}"><p>{desc}</p></div>'
         for file, desc in certs
     )
     body = f'<h2>Certificates</h2><div class="cert-container">{cert_html}</div>'
     return render_page('Certificates | Muhammad Faizan', 'certificates', body)
 
+# ── page: experience ───────────────────────────────────────────────────────────
 @app.route('/experience')
 def experience():
     experiences = [
-        ("Auto Tech", "Team Lead / Data Entry / Report Maker", "2024 – Present, 1 yr",
-         "Leading a team, managing data pipelines and compiling analytical reports."),
-        ("American Web Express", "Sales Executive & Team Leader", "2023 – 2024, 1 yr",
-         "Drove sales strategy and coached agents on customer-focused communication."),
-        ("Innovative Tech", "Senior Supervisor / Data Entry", "2021 – 2023, 2.5 yrs",
-         "Oversaw operations, ensured data integrity and mentored junior staff."),
-        ("Tricore Marketing Solution (TMS Holdings)", "Call-Center Agent / Data Entry", "2019 – 2021, 1.5 yrs",
-         "Handled outbound calls and maintained accurate records of customer interactions.")
+        ("Sales Support Executive", "Tricore Marketing Solution, Karachi (1 Year)",
+         "Called physicians to obtain fax numbers, processed prescriptions, and maintained accurate records in Excel."),
+
+        ("Data Management Assistant", "Auto Tech, Karachi (1 Year)",
+         "Supported internal operations by handling routine data tasks and report workflows."),
+
+        ("AI Project Developer", "Innovative Tech, Karachi (6 Months)",
+         "Led the development of AI-based projects tailored to client requirements received by the sales team.")
     ]
     boxes = ''.join(
-        f'<div class="entry-box">'
-        f'  <h3>{org} — {role} <small>({duration})</small></h3>'
-        f'  <p>{desc}</p>'
-        f'</div>'
-        for org, role, duration, desc in experiences
+        f'<div class="entry-box"><h3>{title}</h3><p><strong>{org}</strong><br>{desc}</p></div>'
+        for title, org, desc in experiences
     )
     body = f'<h2>Work Experience</h2>{boxes}'
     return render_page('Experience | Muhammad Faizan', 'experience', body)
 
+# ── page: contact ──────────────────────────────────────────────────────────────
 @app.route('/contact')
 def contact():
     body = '''
@@ -251,5 +238,6 @@ def contact():
     '''
     return render_page('Contact | Muhammad Faizan', 'contact', body)
 
+# ── main ───────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
