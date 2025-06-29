@@ -88,11 +88,9 @@ img.profile{width:160px;height:220px;object-fit:cover;border-radius:10px;
 </html>
 '''
 
-# ── helper ─────────────────────────────────────────────────────────────────────
 def render_page(title, active, body_html):
     return render_template_string(BASE_TEMPLATE, title=title, active=active, body=body_html)
 
-# ── static file routes ─────────────────────────────────────────────────────────
 @app.route('/profile/<path:filename>')
 def profile_file(filename):
     return send_from_directory('profile', filename)
@@ -105,7 +103,6 @@ def project_files(filename):
 def certificate_files(filename):
     return send_from_directory('certificates', filename)
 
-# ── page: home ─────────────────────────────────────────────────────────────────
 @app.route('/')
 def home():
     body = '''
@@ -121,7 +118,6 @@ def home():
     '''
     return render_page('Muhammad Faizan | Home', 'home', body)
 
-# ── page: skills ───────────────────────────────────────────────────────────────
 @app.route('/skills')
 def skills():
     skills_data = [
@@ -144,27 +140,26 @@ def skills():
     body = f'<h2>Skills</h2><div class="card">{bars}</div>'
     return render_page('Skills | Muhammad Faizan', 'skills', body)
 
-# ── page: projects ─────────────────────────────────────────────────────────────
 @app.route('/projects')
 def projects():
     projects = [
-        ("ai%20travel%20planner.jpg", "Ai Travel Planner",
+        ("project1.jpg", "Ai Travel Planner",
          "A Flask-based web application that helps users plan personalized trips across Pakistan based on their budget, preferences, and travel goals.",
          "https://my-ai-travel-guide.vercel.app/"),
 
-        ("cnn%20cat%20vs%20dog%20classifier.jpg", "CNN Cat vs Dog Classifier",
+        ("project2.jpg", "CNN Cat vs Dog Classifier",
          "A complete CNN-based image classification project to identify cats and dogs using TensorFlow/Keras, including EDA, training, evaluation, and predictions.",
          "https://github.com/faizankhan1428/cats-vs-dogs-cnn"),
 
-        ("titanic%20survival%20prediction.jpg", "Titanic Survival Prediction",
+        ("project3.jpg", "Titanic Survival Prediction",
          "Beginner-friendly Titanic survival prediction using EDA, feature engineering, and Random Forest model. Built for Kaggle competition.",
          "https://github.com/faizankhan1428/titanic-survival-prediction"),
 
-        ("Data%20profiler.jpg", "Data Profiler",
+        ("project4.jpg", "Data Profiler",
          "A simple Flask-based web application that allows users to upload CSV files, view data profiling reports, generate visualizations, apply cleaning options, and download the cleaned data.",
          "https://data.profiler.vercel.app/"),
 
-        ("psl%20cricket%20analysis.jpg", "PSL Cricket Analysis",
+        ("project5.jpg", "PSL Cricket Analysis",
          "A machine learning model that predicts match winners based on team combinations.",
          "https://github.com/faizankhan1428/PSL")
     ]
@@ -179,7 +174,6 @@ def projects():
     body = f'<h2>Projects</h2><div class="project-grid">{cards}</div>'
     return render_page('Projects | Muhammad Faizan', 'projects', body)
 
-# ── page: certificates ─────────────────────────────────────────────────────────
 @app.route('/certificates')
 def certificates():
     certs = [
@@ -200,7 +194,6 @@ def certificates():
     body = f'<h2>Certificates</h2><div class="cert-container">{cert_html}</div>'
     return render_page('Certificates | Muhammad Faizan', 'certificates', body)
 
-# ── page: experience ───────────────────────────────────────────────────────────
 @app.route('/experience')
 def experience():
     experiences = [
@@ -220,7 +213,6 @@ def experience():
     body = f'<h2>Work Experience</h2>{boxes}'
     return render_page('Experience | Muhammad Faizan', 'experience', body)
 
-# ── page: contact ──────────────────────────────────────────────────────────────
 @app.route('/contact')
 def contact():
     body = '''
@@ -238,6 +230,5 @@ def contact():
     '''
     return render_page('Contact | Muhammad Faizan', 'contact', body)
 
-# ── main ───────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
